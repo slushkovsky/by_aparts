@@ -14,6 +14,7 @@ def parse_args():
     parser.add_argument('rooms', nargs='+')
     parser.add_argument('--with-opts', nargs='+', default=[])
     parser.add_argument('--without-opts', nargs='+', default=[])
+    parser.add_argument('--with-words', nargs='+', default=[])
     parser.add_argument('--ignore', nargs='+', default=[], help='List of .txt files with URL\'s to ignore')
 
     args = parser.parse_args()
@@ -84,14 +85,28 @@ def apart_option(tree, name):
 
     return not 'apartment-options__item_lack' in found.attrib['class']
 
+def apart_descr(tree):
+    descr_elem = tree.xpath('//*[contains(@class, "apartment-info__line")]//*[contains(@class, "apartment-info__cell_66")]//*[contains(@class, "apartment-info__sub-line_extended-bottom")]')
+    
+    if len(descr_elem) == 0:
+        return ''
 
-def check_apart_opts(url, with_opts, without_opts):
+    assert len(descr_elem) == 1
+    
+    descr_elem = descr_elem[0]
+
+    return ''.join(list(descr_elem.itertext()))
+
+
+def check_apart_opts(url, with_opts, without_opts, with_words):
     assert isinstance(url, str)
     assert url.startswith('http')
     assert isinstance(with_opts, list)
     assert isinstance(without_opts, list)
+    assert isinstance(with_words, list)
     assert all((isinstance(opt, str) for opt in with_opts))
     assert all((isinstance(opt, str) for opt in without_opts))
+    assert all((isinstance(word, str) for word in with_words))
 
     resp = requests.get(url)
     tree = etree.HTML(resp.text)
@@ -108,6 +123,12 @@ def check_apart_opts(url, with_opts, without_opts):
         if value:
             return False
 
+    descr = apart_descr(tree)
+
+    for word in with_words:
+        if not word.lower() in descr.lower():
+            return False
+
     return True
 
 
@@ -120,7 +141,7 @@ if __name__ == '__main__':
     for i, apart in enumerate(aparts):
         print(f'Parse apart pages: {i}/{len(aparts)} ... (found: {len(true_aparts)})', end='\r')
 
-        if check_apart_opts(apart['url'], args.with_opts, args.without_opts):
+        if check_apart_opts(apart['url'], args.with_opts, args.without_opts, args.with_words):
             true_aparts.append(apart)
 
     print(f'Parse apart pages: DONE ({len(aparts)})')
