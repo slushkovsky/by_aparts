@@ -14,6 +14,7 @@ def parse_args():
     parser.add_argument('rooms', nargs='+')
     parser.add_argument('--with-opts', nargs='+', default=[])
     parser.add_argument('--without-opts', nargs='+', default=[])
+    parser.add_argument('--ignore', nargs='+', default=[], help='List of .txt files with URL\'s to ignore')
 
     args = parser.parse_args()
 
@@ -124,5 +125,16 @@ if __name__ == '__main__':
 
     print(f'Parse apart pages: DONE ({len(aparts)})')
 
-    for apart in true_aparts:
-        print(apart['url'])
+    true_aparts_urls = [apart['url'] for apart in true_aparts]
+
+    ignore_list = []
+
+    for ignore_file in args.ignore:
+        with open(ignore_file) as f:
+            for line in f.readlines():
+                ignore_list.append(line)
+
+    results = set(true_aparts_urls) - set(ignore_list)
+
+    for url in results:
+        print(url)
