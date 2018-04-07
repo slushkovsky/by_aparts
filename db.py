@@ -6,7 +6,7 @@ db = SqliteDatabase('.search_history.sqlite3')
 class SearchResult(Model):
     class Meta:
         database = db
-        table_name = 'search_result'
+        table_name = 'search_results'
 
     url = CharField(unique=True)
 

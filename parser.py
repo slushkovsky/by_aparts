@@ -5,6 +5,8 @@ from argparse import ArgumentParser
 import requests
 from lxml import etree
 
+from db import SearchResult
+
 
 def parse_args():
     parser = ArgumentParser()
@@ -15,7 +17,7 @@ def parse_args():
     parser.add_argument('--with-opts', nargs='+', default=[])
     parser.add_argument('--without-opts', nargs='+', default=[])
     parser.add_argument('--with-words', nargs='+', default=[])
-    parser.add_argument('--ignore', nargs='+', default=[], help='List of .txt files with URL\'s to ignore')
+    parser.add_argument('--previous-results', action='store_true', help='Show all results including which was found earlier')
 
     args = parser.parse_args()
 
@@ -144,18 +146,23 @@ if __name__ == '__main__':
         if check_apart_opts(apart['url'], args.with_opts, args.without_opts, args.with_words):
             true_aparts.append(apart)
 
-    print(f'Parse apart pages: DONE ({len(aparts)})')
+    print(f'Parse apart pages: DONE ({len(aparts)})' + ' '*20)
 
     true_aparts_urls = [apart['url'] for apart in true_aparts]
 
-    ignore_list = []
+    printed = 0
+    skiped = 0
 
-    for ignore_file in args.ignore:
-        with open(ignore_file) as f:
-            for line in f.readlines():
-                ignore_list.append(line)
+    for url in true_aparts_urls:
+        is_known_result = SearchResult.select().where(SearchResult.url == url).exists()
 
-    results = set(true_aparts_urls) - set(ignore_list)
+        if not is_known_result or (is_known_result and args.previous_results):
+            print(url)
+            printed += 1
+        else:
+            skiped += 1
 
-    for url in results:
-        print(url)
+        if not is_known_result:
+            SearchResult.create(url=url)
+
+    print(f'Count: {printed} printed + {skiped} hidden (was found earlier, use --previous-results to display)')
