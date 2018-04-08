@@ -23,7 +23,7 @@ class SearchParams(nps.ActionForm):
         _y += 5
 
         # Row 2
-        self.add(nps.TitleMultiSelect, name='Rooms count:', values=ROOMS_OPTIONS, rely=_y, max_height=len(ROOMS_OPTIONS), max_width=w // 2)
+        self.add(nps.TitleMultiSelect, name='Rooms count:', values=ROOMS_OPTIONS, rely=_y, max_height=len(ROOMS_OPTIONS), max_width=w // 2, scroll_exit=True)
         self.add(nps.TitleText, name='Price min ($):', relx=w // 2 + 1, rely=_y, use_two_lines=False)
         self.add(nps.TitleText, name='Price max ($):', relx=w // 2 + 1, rely=_y + 1, use_two_lines=False)
         self.add(nps.TitleText, name='With words:', relx=w // 2 + 1, rely=_y + 2, use_two_lines=False)
