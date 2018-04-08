@@ -35,7 +35,7 @@ class SearchParams(nps.ActionForm):
         _y += 1
 
         for option in APART_OPTIONS:
-            self.add(nps.MultistateCheckbox, rely=_y, relx=18)
+            self.add(MultistateCheckbox, rely=_y, relx=18)
             self.add(nps.FixedText, value=option, rely=_y, relx=18 + 5, editable=False)
             _y += 1
 
