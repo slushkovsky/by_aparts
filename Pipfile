@@ -10,6 +10,9 @@ npyscreen = "==4.10.5"
 peewee = "==3.2.2"
 
 [dev-packages]
+mypy = "*"
+"flake8" = "*"
+jones-complexity = {git = "https://github.com/Miserlou/JonesComplexity.git"}
 
 [requires]
 python_version = "3.6"
