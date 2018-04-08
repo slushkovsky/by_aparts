@@ -22,4 +22,4 @@
 * "Blacklist" квартир
 
 ## Минорные моменты
-Написано на python3.6
+Разработка: python3.6, pipenv, mypy, flake8 (+ jones-complexity)
