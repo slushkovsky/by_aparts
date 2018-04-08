@@ -36,8 +36,11 @@ class SearchParams(nps.ActionForm):
         self.nextrely += 1
 
         # Row 3
+        start_y = self.nextrely
+
+        ## Col 1
         self.nextrelx = FIRST_COLUMN_X
-        
+
         self.add(nps.FixedText, value='Options:', editable=False)
 
         for option in APART_OPTIONS:
@@ -48,8 +51,20 @@ class SearchParams(nps.ActionForm):
             self.nextrelx -= 5
 
         self.nextrely += 1
+       
+        row_nextrely = self.nextrely
+
+        ## Col 2
+        self.nextrely = start_y
+        self.nextrelx = SECOND_COLUMN_X
+
+        self.add(nps.Checkbox, name='Only owner (remove ads from agencies)')
+
+        row_nextrely = max(self.nextrely, row_nextrely)
+        self.nextrely = row_nextrely
 
         # Row 4
+        self.nextrelx = FIRST_COLUMN_X
         self.add(nps.Checkbox, name='Show previous results')
 
     def on_ok(self):
