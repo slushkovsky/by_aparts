@@ -1,5 +1,4 @@
 import urllib.parse
-from pprint import pprint
 from argparse import ArgumentParser
 
 import requests
@@ -25,6 +24,7 @@ def parse_args():
 
     return args
 
+
 def make_url(price_min, price_max, rooms, page, only_owner=True):
     assert isinstance(price_min, int)
     assert isinstance(price_max, int)
@@ -43,11 +43,12 @@ def make_url(price_min, price_max, rooms, page, only_owner=True):
         'bounds[lb][lat]': 53.760473464187534,
         'bounds[lb][long]': 27.263404244164413,
         'bounds[rt][lat]': 54.042088515398746,
-        'bounds[rt][long]': 27.76189333742789, 
+        'bounds[rt][long]': 27.76189333742789,
         'page': page
     }
 
     return 'https://ak.api.onliner.by/search/apartments?' + urllib.parse.urlencode(params) + ''.join([f'&rent_type[]={n}_room{"s" if n > 1 else ""}' for n in rooms])
+
 
 def parse_aparts(price_min, price_max, rooms, only_owner=True):
     assert isinstance(price_min, int)
@@ -78,6 +79,7 @@ def parse_aparts(price_min, price_max, rooms, only_owner=True):
 
     return results
 
+
 def apart_option(tree, name):
     assert isinstance(name, str)
 
@@ -85,16 +87,17 @@ def apart_option(tree, name):
     assert len(found) == 1
     found = found[0]
 
-    return not 'apartment-options__item_lack' in found.attrib['class']
+    return 'apartment-options__item_lack' not in found.attrib['class']
+
 
 def apart_descr(tree):
     descr_elem = tree.xpath('//*[contains(@class, "apartment-info__line")]//*[contains(@class, "apartment-info__cell_66")]//*[contains(@class, "apartment-info__sub-line_extended-bottom")]')
-    
+
     if len(descr_elem) == 0:
         return ''
 
     assert len(descr_elem) == 1
-    
+
     descr_elem = descr_elem[0]
 
     return ''.join(list(descr_elem.itertext()))
@@ -112,7 +115,7 @@ def check_apart_opts(url, with_opts, without_opts, with_words):
 
     resp = requests.get(url)
     tree = etree.HTML(resp.text)
-   
+
     for opt in with_opts:
         value = apart_option(tree, opt)
         assert isinstance(value, bool)
