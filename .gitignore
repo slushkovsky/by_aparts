@@ -1,5 +1,6 @@
 .search_history.sqlite3
 
+.editorconfig
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

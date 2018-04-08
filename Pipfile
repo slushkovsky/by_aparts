@@ -1,0 +1,15 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+lxml = "==4.2.0"
+requests = "==2.18.4"
+npyscreen = "==4.10.5"
+peewee = "==3.2.2"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"
