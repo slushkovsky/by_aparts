@@ -13,6 +13,7 @@ peewee = "==3.2.2"
 mypy = "*"
 "flake8" = "*"
 jones-complexity = {git = "https://github.com/Miserlou/JonesComplexity.git"}
+"doc8" = "*"
 
 [requires]
 python_version = "3.6"
